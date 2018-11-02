@@ -52,7 +52,29 @@ namespace N1_Automatos
                     automato.ListEstados.Find(x => x.Nome == estadosFinais[i]).Final = true;
                 }
 
-                
+                for (int i = 5; i < lines.Length; i++)
+                {
+                    if (lines[i].Contains("#"))
+                        break;
+                    string linha = AutomatoUtils.RemoveParenteses(lines[i]);
+                    string[] linhaSplit = linha.Split(',');
+                    Estado estadoPartida = automato.ListEstados.Find(x => x.Nome == linhaSplit[0]);
+                    List<Estado> estadoList;
+                    if (estadoPartida.Map.ContainsKey(linhaSplit[1]))
+                    {
+                        estadoList = estadoPartida.Map[linhaSplit[1]];
+                        estadoList.Add(automato.ListEstados.Find(x => x.Nome == linhaSplit[2]));
+                    }
+                    else
+                    {
+                        estadoList = new List<Estado>
+                        {
+                            automato.ListEstados.Find(x => x.Nome == linhaSplit[2])
+                        };
+                        estadoPartida.Map[linhaSplit[1]] = estadoList;
+                    }
+                }
+                Automato automatoBreak = automato;
             }
         }
     }

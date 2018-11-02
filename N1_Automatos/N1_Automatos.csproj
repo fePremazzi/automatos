@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Automato.cs" />
+    <Compile Include="AutomatoUtils.cs" />
     <Compile Include="EnumTipo.cs" />
     <Compile Include="Estado.cs" />
     <Compile Include="Form1.cs">
