@@ -16,13 +16,17 @@ namespace N1_Automatos
         public Form1()
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            openAutomato.Filter = "Arquivos Texto|*.txt";
+            openIN_File.Filter = "Arquivos IN|*.in";
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openAutomato.ShowDialog() == DialogResult.OK)
             {
-                string[] lines = File.ReadAllLines(openFileDialog1.FileName);
+                string[] lines = File.ReadAllLines(openAutomato.FileName);
                 EnumTipo tipo = EnumTipo.AFD;
                 for (int i = 0; i < lines.Length; i++)
                 {
@@ -75,6 +79,14 @@ namespace N1_Automatos
                     }
                 }
                 Automato automatoBreak = automato;
+            }
+        }
+
+        private void loadIN_Click(object sender, EventArgs e)
+        {
+            if (openIN_File.ShowDialog() == DialogResult.OK)
+            {
+
             }
         }
     }

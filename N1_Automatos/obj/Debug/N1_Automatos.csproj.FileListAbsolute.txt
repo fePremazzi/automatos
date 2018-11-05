@@ -8,3 +8,13 @@ C:\Users\Avell B155 MAX\source\repos\N1_Automatos\N1_Automatos\bin\Debug\N1_Auto
 C:\Users\Avell B155 MAX\source\repos\N1_Automatos\N1_Automatos\bin\Debug\N1_Automatos.pdb
 C:\Users\Avell B155 MAX\source\repos\N1_Automatos\N1_Automatos\obj\Debug\N1_Automatos.exe
 C:\Users\Avell B155 MAX\source\repos\N1_Automatos\N1_Automatos\obj\Debug\N1_Automatos.pdb
+C:\visual-studio-workspace\automatos\N1_Automatos\bin\Debug\N1_Automatos.exe.config
+C:\visual-studio-workspace\automatos\N1_Automatos\bin\Debug\N1_Automatos.exe
+C:\visual-studio-workspace\automatos\N1_Automatos\bin\Debug\N1_Automatos.pdb
+C:\visual-studio-workspace\automatos\N1_Automatos\obj\Debug\N1_Automatos.csprojAssemblyReference.cache
+C:\visual-studio-workspace\automatos\N1_Automatos\obj\Debug\N1_Automatos.Form1.resources
+C:\visual-studio-workspace\automatos\N1_Automatos\obj\Debug\N1_Automatos.Properties.Resources.resources
+C:\visual-studio-workspace\automatos\N1_Automatos\obj\Debug\N1_Automatos.csproj.GenerateResource.cache
+C:\visual-studio-workspace\automatos\N1_Automatos\obj\Debug\N1_Automatos.csproj.CoreCompileInputs.cache
+C:\visual-studio-workspace\automatos\N1_Automatos\obj\Debug\N1_Automatos.exe
+C:\visual-studio-workspace\automatos\N1_Automatos\obj\Debug\N1_Automatos.pdb
