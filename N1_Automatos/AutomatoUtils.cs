@@ -12,5 +12,13 @@ namespace N1_Automatos
         {
             return texto.Substring(1, texto.Length - 2);
         }
+
+        public static void TamanhoMinimo(string[] linhas)
+        {
+            if (linhas.Length < 7)
+            {
+                throw new Exception("Automato nao possui o minimo de parâmetros.");
+            }
+        }
     }
 }
