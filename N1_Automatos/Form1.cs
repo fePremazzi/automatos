@@ -24,62 +24,72 @@ namespace N1_Automatos
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            if (openAutomato.ShowDialog() == DialogResult.OK)
+            try
             {
-                string[] lines = File.ReadAllLines(openAutomato.FileName);
-                EnumTipo tipo = EnumTipo.AFD;
-                for (int i = 0; i < lines.Length; i++)
+                if (openAutomato.ShowDialog() == DialogResult.OK)
                 {
+                    string[] lines = File.ReadAllLines(openAutomato.FileName);
+                    EnumTipo tipo = EnumTipo.AFD;
+
                     //TODO Verificaçoes
-                }
-                Automato automato = new Automato();
+                    AutomatoUtils.TamanhoMinimo(lines);
+                    AutomatoUtils.UltimaLinha(lines);
+                    AutomatoUtils.VerificaQuintupla(lines);
 
-                automato.Tipo = tipo;
-                string[] estados = lines[1].Split(',');
-                for (int i = 0; i < estados.Length; i++)
-                {
-                    Estado estado = new Estado(estados[i]);
-                    automato.ListEstados.Add(estado);                    
-                }
 
-                string[] simbolosAlfabeto = lines[2].Split(',');
-                for (int i = 0; i < simbolosAlfabeto.Length; i++)
-                {
-                    automato.Alfabeto.Add(simbolosAlfabeto[i]);
-                }
-
-                automato.ListEstados.Find(x => x.Nome == lines[3]).Inicial = true;
-
-                string[] estadosFinais = lines[4].Split(',');
-                for (int i = 0; i < estadosFinais.Length; i++)
-                {
-                    automato.ListEstados.Find(x => x.Nome == estadosFinais[i]).Final = true;
-                }
-
-                for (int i = 5; i < lines.Length; i++)
-                {
-                    if (lines[i].Contains("#"))
-                        break;
-                    string linha = AutomatoUtils.RemoveParenteses(lines[i]);
-                    string[] linhaSplit = linha.Split(',');
-                    Estado estadoPartida = automato.ListEstados.Find(x => x.Nome == linhaSplit[0]);
-                    List<Estado> estadoList;
-                    if (estadoPartida.Map.ContainsKey(linhaSplit[1]))
+                    Automato automato = new Automato();
+                    automato.Tipo = tipo;
+                    string[] estados = lines[1].Split(',');
+                    for (int i = 0; i < estados.Length; i++)
                     {
-                        estadoList = estadoPartida.Map[linhaSplit[1]];
-                        estadoList.Add(automato.ListEstados.Find(x => x.Nome == linhaSplit[2]));
+                        Estado estado = new Estado(estados[i]);
+                        automato.ListEstados.Add(estado);
                     }
-                    else
+
+                    string[] simbolosAlfabeto = lines[2].Split(',');
+                    for (int i = 0; i < simbolosAlfabeto.Length; i++)
                     {
-                        estadoList = new List<Estado>
+                        automato.Alfabeto.Add(simbolosAlfabeto[i]);
+                    }
+
+                    automato.ListEstados.Find(x => x.Nome == lines[3]).Inicial = true;
+
+                    string[] estadosFinais = lines[4].Split(',');
+                    for (int i = 0; i < estadosFinais.Length; i++)
+                    {
+                        automato.ListEstados.Find(x => x.Nome == estadosFinais[i]).Final = true;
+                    }
+
+                    for (int i = 5; i < lines.Length; i++)
+                    {
+                        if (lines[i].Contains("#"))
+                            break;
+                        string linha = AutomatoUtils.RemoveParenteses(lines[i]);
+                        string[] linhaSplit = linha.Split(',');
+                        Estado estadoPartida = automato.ListEstados.Find(x => x.Nome == linhaSplit[0]);
+                        List<Estado> estadoList;
+                        if (estadoPartida.Map.ContainsKey(linhaSplit[1]))
+                        {
+                            estadoList = estadoPartida.Map[linhaSplit[1]];
+                            estadoList.Add(automato.ListEstados.Find(x => x.Nome == linhaSplit[2]));
+                        }
+                        else
+                        {
+                            estadoList = new List<Estado>
                         {
                             automato.ListEstados.Find(x => x.Nome == linhaSplit[2])
                         };
-                        estadoPartida.Map[linhaSplit[1]] = estadoList;
+                            estadoPartida.Map[linhaSplit[1]] = estadoList;
+                        }
                     }
+                    Automato automatoBreak = automato;
                 }
-                Automato automatoBreak = automato;
             }
+            catch (Exception erro)
+            {
+                MessageBox.Show(erro.Message, "Não foi possível carregar seu automato", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void loadIN_Click(object sender, EventArgs e)
