@@ -74,7 +74,20 @@ namespace N1_Automatos
                         estadoPartida.Map[linhaSplit[1]] = estadoList;
                     }
                 }
-                Automato automatoBreak = automato;
+                if (File.Exists(@"C:\Users\uer\Desktop\Autômatos\words.in"))
+                {
+                    string[] linesWords = File.ReadAllLines(@"C:\Users\uer\Desktop\Autômatos\words.in");
+                    Estado estado = automato.ListEstados.Find(x => x.Inicial);
+                    for (int i = 0; i < linesWords.Length; i++)
+                    {
+                        char[] lettersWord = linesWords[i].ToCharArray();
+                        for (int j = 0; j < lettersWord.Length; j++)
+                        {
+                            List<Estado> estadosProximos = estado.Map[lettersWord[j].ToString()];
+                        }
+                    }
+                    File.WriteAllLines("words.out", linesWords);
+                }
             }
         }
     }
