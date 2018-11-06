@@ -25,5 +25,11 @@ namespace N1_Automatos
         public bool Inicial { get => inicial; set => inicial = value; }
         public bool Final { get => final; set => final = value; }
         internal Dictionary<string, List<Estado>> Map { get => map; set => map = value; }
+
+        public override string ToString()
+        {
+            return this.nome;
+        }
     }
+    
 }

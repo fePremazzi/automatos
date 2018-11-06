@@ -21,6 +21,7 @@ namespace N1_Automatos
             openAutomato.Filter = "Arquivos Texto|*.txt";
             openIN_File.Filter = "Arquivos IN|*.in";
         }
+        Automato automato;
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
@@ -28,20 +29,26 @@ namespace N1_Automatos
             {
                 string[] lines = File.ReadAllLines(openAutomato.FileName);
                 EnumTipo tipo = EnumTipo.AFD;
+
+                //Verificações
                 for (int i = 0; i < lines.Length; i++)
                 {
                     //TODO Verificaçoes
                 }
-                Automato automato = new Automato();
 
+
+                automato = new Automato();
                 automato.Tipo = tipo;
+
+                //Estados
                 string[] estados = lines[1].Split(',');
                 for (int i = 0; i < estados.Length; i++)
                 {
                     Estado estado = new Estado(estados[i]);
-                    automato.ListEstados.Add(estado);                    
+                    automato.ListEstados.Add(estado);
                 }
 
+                //Alfabeto
                 string[] simbolosAlfabeto = lines[2].Split(',');
                 for (int i = 0; i < simbolosAlfabeto.Length; i++)
                 {
@@ -56,6 +63,7 @@ namespace N1_Automatos
                     automato.ListEstados.Find(x => x.Nome == estadosFinais[i]).Final = true;
                 }
 
+                //Transição
                 for (int i = 5; i < lines.Length; i++)
                 {
                     if (lines[i].Contains("#"))
@@ -78,20 +86,28 @@ namespace N1_Automatos
                         estadoPartida.Map[linhaSplit[1]] = estadoList;
                     }
                 }
-                if (File.Exists(@"C:\Users\uer\Desktop\Autômatos\words.in"))
+
+
+                while (automato.ListEstados.Find(x => x.Map.ContainsKey("@")) != null)
                 {
-                    string[] linesWords = File.ReadAllLines(@"C:\Users\uer\Desktop\Autômatos\words.in");
-                    Estado estado = automato.ListEstados.Find(x => x.Inicial);
-                    for (int i = 0; i < linesWords.Length; i++)
+                    Estado estado = automato.ListEstados.Find(x => x.Map.ContainsKey("@"));
+                    List<Estado> estados2 = estado.Map["@"];
+                    int count = estados2.Count;
+                    for (int j = 0; j < count; j++)
                     {
-                        char[] lettersWord = linesWords[i].ToCharArray();
-                        for (int j = 0; j < lettersWord.Length; j++)
+                        foreach (var item in estados2[j].Map)
                         {
-                            List<Estado> estadosProximos = estado.Map[lettersWord[j].ToString()];
+                            if (!estado.Map.ContainsKey(item.Key))
+                                estado.Map[item.Key] = new List<Estado>();
+
+                            estado.Map[item.Key].AddRange(item.Value);
+
                         }
                     }
-                    File.WriteAllLines("words.out", linesWords);
+                    estado.Map.Remove("@");
                 }
+
+                String parou = "stop";
             }
         }
 
@@ -99,6 +115,17 @@ namespace N1_Automatos
         {
             if (openIN_File.ShowDialog() == DialogResult.OK)
             {
+                string[] linesWords = File.ReadAllLines(openIN_File.FileName);
+                Estado estado = automato.ListEstados.Find(x => x.Inicial);
+                for (int i = 0; i < linesWords.Length; i++)
+                {
+                    char[] lettersWord = linesWords[i].ToCharArray();
+                    for (int j = 0; j < lettersWord.Length; j++)
+                    {
+                        List<Estado> estadosProximos = estado.Map[lettersWord[j].ToString()];
+                    }
+                }
+                File.WriteAllLines("words.out", linesWords);
 
             }
         }
