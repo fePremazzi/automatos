@@ -35,6 +35,7 @@ namespace N1_Automatos
                     AutomatoUtils.TamanhoMinimo(lines);
                     AutomatoUtils.UltimaLinha(lines);
                     AutomatoUtils.VerificaQuintupla(lines);
+                    AutomatoUtils.VerificaTipo(lines[0]);
 
 
                     Automato automato = new Automato();

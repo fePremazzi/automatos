@@ -17,8 +17,7 @@ namespace N1_Automatos
         {
             if (linhas.Length < 7)
             {
-                throw new Exception("Automato nao possui o minimo de parâmetros. Automato deve possuir" +
-                                    " sua quintupla.");
+                throw new Exception("Automato nao possui o minimo de parâmetros.");
             }
         }
 
@@ -34,16 +33,12 @@ namespace N1_Automatos
         public static void VerificaQuintupla(string[] linhas)
         {
             int count = 0;
+            //Vai até length -1 pra nao pegar o ####
             for (int i = 0; i < linhas.Length - 1; i++)
             {
-                if (linhas[i].Contains("("))
-                {
-                    VerificaTransicao(linhas[i]);
-                }
-                else
-                {
+                if (!linhas[i].Contains("("))                
                     count++;
-                }
+                
             }
 
             if (count != 5)
@@ -60,6 +55,15 @@ namespace N1_Automatos
 
             //Verifricar se a funcao de transição esta no formato correto
 
+        }
+
+        public static void VerificaTipo(string tipo)
+        {
+            if (tipo != EnumTipo.AFN.ToString() || 
+                tipo != EnumTipo.AFNe.ToString())
+            {
+                throw new Exception("Tipo de automato incorreto. Deve ser AFN ou AFNe.");
+            }
         }
     }
 }
