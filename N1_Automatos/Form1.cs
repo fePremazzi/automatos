@@ -87,27 +87,60 @@ namespace N1_Automatos
                     }
                 }
 
+                MergirComFechoE();
+                string parou = "stop";
+            }
+        }
 
-                while (automato.ListEstados.Find(x => x.Map.ContainsKey("@")) != null)
+        private void MergirComFechoE()
+        {
+            for (int i = 0; i < automato.ListEstados.Count; i++)
+            {
+                Estado estado = automato.ListEstados[i];
+                if (!estado.Map.ContainsKey("@"))
+                    continue;
+                List<Estado> estados2 = estado.Map["@"];
+                int count = estados2.Count;
+                for (int j = 0; j < count; j++)
                 {
-                    Estado estado = automato.ListEstados.Find(x => x.Map.ContainsKey("@"));
-                    List<Estado> estados2 = estado.Map["@"];
-                    int count = estados2.Count;
-                    for (int j = 0; j < count; j++)
+                    foreach (var item in estados2[j].Map)
                     {
-                        foreach (var item in estados2[j].Map)
+                        if (item.Key.Equals("@"))
+                            continue;
+                        if (!estado.Map.ContainsKey(item.Key))
+                            estado.Map[item.Key] = new List<Estado>();
+
+                        estado.Map[item.Key].AddRange(item.Value);
+                    }
+                }
+            }
+
+            for (int i = 0; i < automato.ListEstados.Count; i++)
+            {
+                Estado estado = automato.ListEstados[i];
+
+                foreach (var item in estado.Map)
+                {
+                    string letra = item.Key;
+                    List<Estado> estadosProxs = item.Value;
+                    List<Estado> estadosToAdd = new List<Estado>();
+                    foreach (var est in estadosProxs)
+                    {
+                        if (est.Map.ContainsKey("@"))
                         {
-                            if (!estado.Map.ContainsKey(item.Key))
-                                estado.Map[item.Key] = new List<Estado>();
-
-                            estado.Map[item.Key].AddRange(item.Value);
-
+                            estadosToAdd.AddRange(est.Map["@"]);
                         }
                     }
-                    estado.Map.Remove("@");
+                    if (estadosToAdd.Count > 0)
+                        estado.Map[letra].AddRange(estadosToAdd);
                 }
 
-                String parou = "stop";
+            }
+
+            foreach (var item in automato.ListEstados)
+            {
+                if (item.Map.ContainsKey("@"))
+                    item.Map.Remove("@");
             }
         }
 
@@ -115,6 +148,7 @@ namespace N1_Automatos
         {
             if (openIN_File.ShowDialog() == DialogResult.OK)
             {
+                //TODO método de ler palavras
                 string[] linesWords = File.ReadAllLines(openIN_File.FileName);
                 Estado estado = automato.ListEstados.Find(x => x.Inicial);
                 for (int i = 0; i < linesWords.Length; i++)
