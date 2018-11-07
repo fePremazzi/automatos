@@ -8,6 +8,8 @@ namespace N1_Automatos
 {
     public static class AutomatoUtils
     {
+        static string[] aEstados = null;
+
         public static string RemoveParenteses(string texto)
         {
             return texto.Substring(1, texto.Length - 2);
@@ -37,24 +39,11 @@ namespace N1_Automatos
             for (int i = 0; i < linhas.Length - 1; i++)
             {
                 if (!linhas[i].Contains("("))                
-                    count++;
-                
+                    count++;                
             }
 
             if (count != 5)
                 throw new Exception("Quintupla nao contém os 5 parametros");
-        }
-
-        private static void VerificaTransicao(string funcT)
-        {
-            if (funcT[0] != '(' && funcT[funcT.Length-1] != ')')
-            {
-                throw new Exception("Função de transição mal escrita, deve inicar e terminar " +
-                                    "com parentesis");
-            }
-
-            //Verifricar se a funcao de transição esta no formato correto
-
         }
 
         public static void VerificaTipo(string tipo)
@@ -64,6 +53,37 @@ namespace N1_Automatos
             {
                 throw new Exception("Tipo de automato incorreto. Deve ser AFN ou AFNe.");
             }
+        }
+
+        public static void VerificaEstados(string conteudo)
+        {
+            aEstados = conteudo.Split(',');
+            string comparador = "";
+            for (int i = 0; i < aEstados.Length; i++)
+            {
+                comparador = aEstados[i];
+                for (int j = 0; j < aEstados.Length; j++)
+                {
+                    if (i != j)
+                    {
+                        if (comparador == aEstados[j])                        
+                            throw new Exception("Estado repetido, insira apenas estados distintos um do outro.");                        
+                    }
+                }
+            }
+        }
+
+
+        private static void VerificaTransicao(string funcT)
+        {
+            if (funcT[0] != '(' && funcT[funcT.Length - 1] != ')')
+            {
+                throw new Exception("Função de transição mal escrita, deve inicar e terminar " +
+                                    "com parentesis");
+            }
+
+            //Verifricar se a funcao de transição esta no formato correto
+
         }
     }
 }
