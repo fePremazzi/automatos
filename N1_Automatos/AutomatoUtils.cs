@@ -48,8 +48,8 @@ namespace N1_Automatos
 
         public static void VerificaTipo(string tipo)
         {
-            if (tipo != EnumTipo.AFN.ToString() || 
-                tipo != EnumTipo.AFNe.ToString())
+            if (tipo.Trim() != EnumTipo.AFN.ToString() && 
+                tipo.Trim() != EnumTipo.AFNe.ToString())
             {
                 throw new Exception("Tipo de automato incorreto. Deve ser AFN ou AFNe.");
             }
@@ -57,20 +57,31 @@ namespace N1_Automatos
 
         public static void VerificaEstados(string conteudo)
         {
-            aEstados = conteudo.Split(',');
-            string comparador = "";
+            aEstados = conteudo.Trim().Split(',');
+            VerificaRepetido(aEstados, "Estado repetido, insira apenas estados distintos um do outro.");
+        }
+
+        public static void VerificaAlfabeto(string conteudo)
+        {
+            string[] alfabeto = conteudo.Trim().Split(',');
+            VerificaRepetido(alfabeto, "Simbolos do alfabeto repetidos, insira apenas simbolos distintos um do outro.");
+        }
+
+        public static void VerificaEstadoInicial(string inicial)
+        {
+            string[] aInicial = inicial.Trim().Split(',');
+            if (aInicial.Length > 1)            
+                throw new Exception("Só deve existir apenas 1 estado inicial");
+            
+            Boolean existe = false;
             for (int i = 0; i < aEstados.Length; i++)
             {
-                comparador = aEstados[i];
-                for (int j = 0; j < aEstados.Length; j++)
-                {
-                    if (i != j)
-                    {
-                        if (comparador == aEstados[j])                        
-                            throw new Exception("Estado repetido, insira apenas estados distintos um do outro.");                        
-                    }
-                }
+                if (aInicial[0] == aEstados[i])                
+                    existe = true;                
             }
+            if (existe == false)            
+                throw new Exception("Estado inicial não existe. Não está dentre os o conjunto de estados existentes.");
+            
         }
 
 
@@ -84,6 +95,23 @@ namespace N1_Automatos
 
             //Verifricar se a funcao de transição esta no formato correto
 
+        }
+
+        private static void VerificaRepetido(string[] array, string errorMessage)
+        {
+            string comparador = "";
+            for (int i = 0; i < array.Length; i++)
+            {
+                comparador = array[i];
+                for (int j = 0; j < array.Length; j++)
+                {
+                    if (i != j)
+                    {
+                        if (comparador == array[j])
+                            throw new Exception(errorMessage);
+                    }
+                }
+            }
         }
     }
 }

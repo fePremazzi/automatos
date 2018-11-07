@@ -29,13 +29,16 @@ namespace N1_Automatos
                 if (openAutomato.ShowDialog() == DialogResult.OK)
                 {
                     string[] lines = File.ReadAllLines(openAutomato.FileName);
-                    EnumTipo tipo = EnumTipo.AFD;
+                    EnumTipo tipo = EnumTipo.AFD;//mudar isso para pegar do arquivo
 
                     //TODO Verificaçoes
                     AutomatoUtils.TamanhoMinimo(lines);
                     AutomatoUtils.UltimaLinha(lines);
                     AutomatoUtils.VerificaQuintupla(lines);
                     AutomatoUtils.VerificaTipo(lines[0]);
+                    AutomatoUtils.VerificaEstados(lines[1]);//precisa vir antes do que VerificaEstadoInicial
+                    AutomatoUtils.VerificaAlfabeto(lines[2]);
+                    AutomatoUtils.VerificaEstadoInicial(lines[3]);
 
 
                     Automato automato = new Automato();
