@@ -9,6 +9,7 @@ namespace N1_Automatos
     public static class AutomatoUtils
     {
         static string[] aEstados = null;
+        static string[] alfabeto;
 
         public static string RemoveParenteses(string texto)
         {
@@ -38,8 +39,8 @@ namespace N1_Automatos
             //Vai até length -1 pra nao pegar o ####
             for (int i = 0; i < linhas.Length - 1; i++)
             {
-                if (!linhas[i].Contains("("))                
-                    count++;                
+                if (!linhas[i].Contains("("))
+                    count++;
             }
 
             if (count != 5)
@@ -48,8 +49,8 @@ namespace N1_Automatos
 
         public static void VerificaTipo(string tipo)
         {
-            if (tipo.Trim() != EnumTipo.AFN.ToString() && 
-                tipo.Trim() != EnumTipo.AFNe.ToString())
+            if (tipo.Trim() != EnumTipo.AFN.ToString() &&
+                tipo.Trim() != EnumTipo.AFNe.ToString() && tipo.Trim() != EnumTipo.AFD.ToString())
             {
                 throw new Exception("Tipo de automato incorreto. Deve ser AFN ou AFNe.");
             }
@@ -63,37 +64,48 @@ namespace N1_Automatos
 
         public static void VerificaAlfabeto(string conteudo)
         {
-            string[] alfabeto = conteudo.Trim().Split(',');
+            alfabeto = conteudo.Trim().Split(',');
             VerificaRepetido(alfabeto, "Simbolos do alfabeto repetidos, insira apenas simbolos distintos um do outro.");
         }
 
         public static void VerificaEstadoInicial(string inicial)
         {
             string[] aInicial = inicial.Trim().Split(',');
-            if (aInicial.Length > 1)            
+            if (aInicial.Length > 1)
                 throw new Exception("Só deve existir apenas 1 estado inicial");
-            
+
             Boolean existe = false;
             for (int i = 0; i < aEstados.Length; i++)
             {
-                if (aInicial[0] == aEstados[i])                
-                    existe = true;                
+                if (aInicial[0] == aEstados[i])
+                    existe = true;
             }
-            if (existe == false)            
+            if (existe == false)
                 throw new Exception("Estado inicial não existe. Não está dentre os o conjunto de estados existentes.");
-            
+
         }
 
 
-        private static void VerificaTransicao(string funcT)
+        public static void VerificaTransicao(string funcT)
         {
-            if (funcT[0] != '(' && funcT[funcT.Length - 1] != ')')
+            if (funcT.Trim()[0] != '(' && funcT.Trim()[funcT.Trim().Length - 1] != ')')
             {
                 throw new Exception("Função de transição mal escrita, deve inicar e terminar " +
                                     "com parentesis");
             }
 
-            //Verifricar se a funcao de transição esta no formato correto
+            string semParent = RemoveParenteses(funcT.Trim());
+            string[] arrayFuncT = semParent.Split(',');
+
+            if (arrayFuncT.Length != 3)
+                throw new Exception("Função de transição incompleta.");
+
+            if (!aEstados.Contains(arrayFuncT[0]) && !aEstados.Contains(arrayFuncT[2]))            
+                throw new Exception("Estado da função de transição nao pertence ao conjunto de dados fornecidos.");
+
+
+            if (!alfabeto.Contains(arrayFuncT[1]))
+                throw new Exception("Símbolo consumido não faz parte do alfabeto");
 
         }
 

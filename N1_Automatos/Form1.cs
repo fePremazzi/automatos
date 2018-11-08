@@ -39,6 +39,11 @@ namespace N1_Automatos
                     AutomatoUtils.VerificaEstados(lines[1]);//precisa vir antes do que VerificaEstadoInicial
                     AutomatoUtils.VerificaAlfabeto(lines[2]);
                     AutomatoUtils.VerificaEstadoInicial(lines[3]);
+                    for (int i = 5; i < lines.Length - 1; i++)
+                    {
+                        AutomatoUtils.VerificaTransicao(lines[i]);
+                    }
+
 
 
                     Automato automato = new Automato();
