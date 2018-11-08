@@ -22,13 +22,15 @@ namespace N1_Automatos
             openIN_File.Filter = "Arquivos IN|*.in";
         }
         Automato automato;
+        string automatoFileName;
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
             if (openAutomato.ShowDialog() == DialogResult.OK)
             {
-                string[] lines = File.ReadAllLines(openAutomato.FileName);
-                EnumTipo tipo = EnumTipo.AFD;
+                automatoFileName = openAutomato.FileName;
+                string[] lines = File.ReadAllLines(automatoFileName);
+                EnumTipo tipo = EnumTipo.AFNe;
 
                 //Verificações
                 for (int i = 0; i < lines.Length; i++)
@@ -44,7 +46,7 @@ namespace N1_Automatos
                 string[] estados = lines[1].Split(',');
                 for (int i = 0; i < estados.Length; i++)
                 {
-                    Estado estado = new Estado(estados[i]);
+                    Estado estado = new Estado(estados[i].Trim());
                     automato.ListEstados.Add(estado);
                 }
 
@@ -52,7 +54,7 @@ namespace N1_Automatos
                 string[] simbolosAlfabeto = lines[2].Split(',');
                 for (int i = 0; i < simbolosAlfabeto.Length; i++)
                 {
-                    automato.Alfabeto.Add(simbolosAlfabeto[i]);
+                    automato.Alfabeto.Add(simbolosAlfabeto[i].Trim());
                 }
 
                 automato.ListEstados.Find(x => x.Nome == lines[3]).Inicial = true;
@@ -60,7 +62,7 @@ namespace N1_Automatos
                 string[] estadosFinais = lines[4].Split(',');
                 for (int i = 0; i < estadosFinais.Length; i++)
                 {
-                    automato.ListEstados.Find(x => x.Nome == estadosFinais[i]).Final = true;
+                    automato.ListEstados.Find(x => x.Nome == estadosFinais[i].Trim()).Final = true;
                 }
 
                 //Transição
@@ -68,98 +70,56 @@ namespace N1_Automatos
                 {
                     if (lines[i].Contains("#"))
                         break;
-                    string linha = AutomatoUtils.RemoveParenteses(lines[i]);
+                    string linha = AutomatoUtils.RemoveParenteses(lines[i].Trim());
                     string[] linhaSplit = linha.Split(',');
-                    Estado estadoPartida = automato.ListEstados.Find(x => x.Nome == linhaSplit[0]);
+                    Estado estadoPartida = automato.ListEstados.Find(x => x.Nome == linhaSplit[0].Trim());
                     List<Estado> estadoList;
-                    if (estadoPartida.Map.ContainsKey(linhaSplit[1]))
+                    if (estadoPartida.Map.ContainsKey(linhaSplit[1].Trim()))
                     {
-                        estadoList = estadoPartida.Map[linhaSplit[1]];
-                        estadoList.Add(automato.ListEstados.Find(x => x.Nome == linhaSplit[2]));
+                        estadoList = estadoPartida.Map[linhaSplit[1].Trim()];
+                        estadoList.Add(automato.ListEstados.Find(x => x.Nome == linhaSplit[2].Trim()));
                     }
                     else
                     {
                         estadoList = new List<Estado>
                         {
-                            automato.ListEstados.Find(x => x.Nome == linhaSplit[2])
+                            automato.ListEstados.Find(x => x.Nome == linhaSplit[2].Trim())
                         };
-                        estadoPartida.Map[linhaSplit[1]] = estadoList;
+                        estadoPartida.Map[linhaSplit[1].Trim()] = estadoList;
                     }
                 }
+                //Autômato pronto
+                automato.MergirComFechoE();
 
-                MergirComFechoE();
-                string parou = "stop";
+                //Conversão
+                if (automato.Tipo.Equals(EnumTipo.AFNe))
+                {
+                    automato.ConvertToAFD();
+                }
+                String parou = "parou";
             }
         }
 
-        private void MergirComFechoE()
-        {
-            for (int i = 0; i < automato.ListEstados.Count; i++)
-            {
-                Estado estado = automato.ListEstados[i];
-                if (!estado.Map.ContainsKey("@"))
-                    continue;
-                List<Estado> estados2 = estado.Map["@"];
-                int count = estados2.Count;
-                for (int j = 0; j < count; j++)
-                {
-                    foreach (var item in estados2[j].Map)
-                    {
-                        if (item.Key.Equals("@"))
-                            continue;
-                        if (!estado.Map.ContainsKey(item.Key))
-                            estado.Map[item.Key] = new List<Estado>();
-
-                        estado.Map[item.Key].AddRange(item.Value);
-                    }
-                }
-            }
-
-            for (int i = 0; i < automato.ListEstados.Count; i++)
-            {
-                Estado estado = automato.ListEstados[i];
-
-                foreach (var item in estado.Map)
-                {
-                    string letra = item.Key;
-                    List<Estado> estadosProxs = item.Value;
-                    List<Estado> estadosToAdd = new List<Estado>();
-                    foreach (var est in estadosProxs)
-                    {
-                        if (est.Map.ContainsKey("@"))
-                        {
-                            estadosToAdd.AddRange(est.Map["@"]);
-                        }
-                    }
-                    if (estadosToAdd.Count > 0)
-                        estado.Map[letra].AddRange(estadosToAdd);
-                }
-
-            }
-
-            foreach (var item in automato.ListEstados)
-            {
-                if (item.Map.ContainsKey("@"))
-                    item.Map.Remove("@");
-            }
-        }
+        
 
         private void loadIN_Click(object sender, EventArgs e)
         {
             if (openIN_File.ShowDialog() == DialogResult.OK)
             {
-                //TODO método de ler palavras
                 string[] linesWords = File.ReadAllLines(openIN_File.FileName);
-                Estado estado = automato.ListEstados.Find(x => x.Inicial);
+                List<bool> listBool = new List<bool>();
                 for (int i = 0; i < linesWords.Length; i++)
                 {
-                    char[] lettersWord = linesWords[i].ToCharArray();
-                    for (int j = 0; j < lettersWord.Length; j++)
-                    {
-                        List<Estado> estadosProximos = estado.Map[lettersWord[j].ToString()];
-                    }
+                    List<Estado> estadoInicial = new List<Estado> { automato.ListEstados.Find(x => x.Inicial) };
+                    listBool.Add(automato.LePalavra(linesWords[i], estadoInicial));
+                }
+                for (int i = 0; i < linesWords.Length; i++)
+                {
+                    linesWords[i] = linesWords[i] + " " + (listBool[i] ? "ACEITO" : "REJEITADO");
                 }
                 File.WriteAllLines("words.out", linesWords);
+
+             
 
             }
         }
