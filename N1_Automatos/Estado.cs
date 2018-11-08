@@ -13,7 +13,10 @@ namespace N1_Automatos
         private bool inicial;
         private bool final;
 
-        public Estado() {}
+        public Estado()
+        {
+            this.map = new Dictionary<string, List<Estado>>();
+        }
 
         public Estado(string nome)
         {

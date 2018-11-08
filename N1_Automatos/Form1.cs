@@ -94,7 +94,7 @@ namespace N1_Automatos
                 //Conversão
                 if (automato.Tipo.Equals(EnumTipo.AFNe))
                 {
-                    automato.ConvertToAFD();
+                    automato = automato.ConvertToAFD();
                 }
                 String parou = "parou";
             }

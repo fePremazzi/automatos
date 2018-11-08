@@ -90,28 +90,74 @@ namespace N1_Automatos
             
         }
 
-        public void ConvertToAFD()
+        public Automato ConvertToAFD()
         {
-            foreach (var estado in ListEstados)
+            Estado estadoInicial = ListEstados.Find(x => x.Inicial);
+            Automato AFD = new Automato();
+            AFD.Alfabeto.AddRange(Alfabeto);
+            AFD.ListEstados.Add(estadoInicial);
+
+            IncluirEstados(AFD, AFD.ListEstados);
+            return AFD;
+        }
+
+        private void IncluirEstados(Automato AFD, List<Estado> estadoList)
+        {
+            if (estadoList.Count > 0)
             {
-                foreach (var item in estado.Map)
+                List<Estado> estadosRecursive = new List<Estado>();
+                List<Estado> estadosToAdd = new List<Estado>();
+                foreach (var estado in estadoList)
                 {
-                    if (item.Value.Count > 1)
+                    List<string> nomesEstadosAFD = new List<string>();
+                    foreach (var item in AFD.ListEstados)
                     {
-                        Estado estadoNovo = new Estado();
-                        foreach (var estadoProx in item.Value)
+                        string aux = item.Nome;
+                        nomesEstadosAFD.Add(aux);
+                    }
+                    Estado estadoComposto = null;
+                    foreach (var estadosProxs in estado.Map.Values)
+                    {
+                        estadoComposto = new Estado();
+                        string nomeProx = "";
+                        foreach (var proxEstado in estadosProxs)
                         {
-                            estadoNovo.Nome += estadoProx.Nome;
-                            foreach (var kvp in estadoProx.Map)
+                            nomeProx += proxEstado.Nome;
+                        }
+                        foreach (var estadoProx in estadosProxs)
+                        {
+                            bool contains = false;
+                            foreach (var a in nomesEstadosAFD)
                             {
-                                if (!estadoNovo.Map.ContainsKey(kvp.Key))
-                                    estadoNovo.Map[kvp.Key] = new List<Estado>();
-                                estadoNovo.Map[kvp.Key].AddRange(kvp.Value);
+                                if (a.Equals(nomeProx))
+                                {
+                                    contains = true;
+                                    break;
+                                }
+                            }
+                            if (!contains)
+                            {
+                                estadoComposto.Nome += estadoProx.Nome;
+                                if (!estadoComposto.Inicial)
+                                    estadoComposto.Inicial = estadoProx.Inicial;
+                                if (!estadoComposto.Final)
+                                    estadoComposto.Final = estadoProx.Final;
+                                foreach (var kvp in estadoProx.Map)
+                                {
+                                    if (!estadoComposto.Map.ContainsKey(kvp.Key))
+                                        estadoComposto.Map[kvp.Key] = new List<Estado>();
+                                    estadoComposto.Map[kvp.Key].AddRange(kvp.Value);
+                                }
                             }
                         }
-                        ListEstados.Add(estadoNovo);
+                        if (!string.IsNullOrEmpty(estadoComposto.Nome) && !estadosToAdd.Contains(estadoComposto))
+                            estadosToAdd.Add(estadoComposto);
                     }
+                    if (!string.IsNullOrEmpty(estadoComposto.Nome))
+                        estadosRecursive.Add(estadoComposto);
                 }
+                AFD.ListEstados.AddRange(estadosToAdd);
+                IncluirEstados(AFD, estadosRecursive);
             }
         }
     }
