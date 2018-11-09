@@ -22,15 +22,14 @@ namespace N1_Automatos
             openIN_File.Filter = "Arquivos IN|*.in";
         }
         Automato automato;
-        string automatoFileName;
+        string automatoFileNameSave;
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
             if (openAutomato.ShowDialog() == DialogResult.OK)
             {
-                automatoFileName = openAutomato.FileName;
-                string[] lines = File.ReadAllLines(automatoFileName);
-                EnumTipo tipo = EnumTipo.AFNe;
+                automatoFileNameSave = openAutomato.FileName.Substring(0, openAutomato.FileName.IndexOf(".txt", StringComparison.Ordinal));
+                string[] lines = File.ReadAllLines(openAutomato.FileName);
 
                 //Verificações
                 for (int i = 0; i < lines.Length; i++)
@@ -38,7 +37,7 @@ namespace N1_Automatos
                     //TODO Verificaçoes
                 }
 
-
+                EnumTipo tipo = (EnumTipo) Enum.Parse(typeof(EnumTipo), lines[0], true);
                 automato = new Automato();
                 automato.Tipo = tipo;
 
@@ -46,6 +45,8 @@ namespace N1_Automatos
                 string[] estados = lines[1].Split(',');
                 for (int i = 0; i < estados.Length; i++)
                 {
+                    if (string.IsNullOrEmpty(estados[i]))
+                        continue;
                     Estado estado = new Estado(estados[i].Trim());
                     automato.ListEstados.Add(estado);
                 }
@@ -88,13 +89,17 @@ namespace N1_Automatos
                         estadoPartida.Map[linhaSplit[1].Trim()] = estadoList;
                     }
                 }
+
                 //Autômato pronto
                 automato.MergirComFechoE();
 
                 //Conversão
+                List<List<Estado>> a = new List<List<Estado>>();
                 if (automato.Tipo.Equals(EnumTipo.AFNe))
                 {
-                    automato = automato.ConvertToAFD();
+                    a = automato.ConvertToAfd();
+                    string nomeConvertido = automatoFileNameSave + "convertido.txt";
+                    File.WriteAllLines(nomeConvertido, AutomatoUtils.geraTxtConvertido(a, automato));
                 }
                 String parou = "parou";
             }
@@ -118,9 +123,6 @@ namespace N1_Automatos
                     linesWords[i] = linesWords[i] + " " + (listBool[i] ? "ACEITO" : "REJEITADO");
                 }
                 File.WriteAllLines("words.out", linesWords);
-
-             
-
             }
         }
     }

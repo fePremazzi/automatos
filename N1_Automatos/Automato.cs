@@ -6,21 +6,22 @@ using System.Threading.Tasks;
 
 namespace N1_Automatos
 {
-    class Automato
+    public class Automato
     {
-        private EnumTipo tipo;
-        private List<Estado> listEstados;
-        private List<string> alfabeto;
-
         public Automato()
         {
-            listEstados = new List<Estado>();
-            alfabeto = new List<string>();
+            ListEstados = new List<Estado>();
+            Alfabeto = new List<string>();
+            contador = 0;
         }
 
-        public EnumTipo Tipo { get => tipo; set => tipo = value; }
-        public List<Estado> ListEstados { get => listEstados; set => listEstados = value; }
-        public List<string> Alfabeto { get => alfabeto; set => alfabeto = value; }
+        private int contador;
+
+        public EnumTipo Tipo { get; set; }
+
+        public List<Estado> ListEstados { get; set; }
+
+        public List<string> Alfabeto { get; set; }
 
         public void MergirComFechoE()
         {
@@ -56,6 +57,8 @@ namespace N1_Automatos
                     List<Estado> estadosToAdd = new List<Estado>();
                     foreach (var est in estadosProxs)
                     {
+                        if (est == null)
+                            continue;
                         if (est.Map.ContainsKey("@"))
                         {
                             estadosToAdd.AddRange(est.Map["@"]);
@@ -64,7 +67,6 @@ namespace N1_Automatos
                     if (estadosToAdd.Count > 0)
                         estado.Map[letra].AddRange(estadosToAdd);
                 }
-
             }
 
             foreach (var item in ListEstados)
@@ -81,84 +83,54 @@ namespace N1_Automatos
             string palavraNova = palavra.Remove(0, 1);
             foreach (var item in estados)
             {
+                if (item == null)
+                    continue;
                 if (item.Map.ContainsKey(letra.ToString()))
                     estadosProxs.AddRange(item.Map[letra.ToString()]);
             }
             if (estadosProxs.Count == 0 || palavraNova.Length == 0)
                 return estadosProxs.Find(x => x.Final) != null;
             return LePalavra(palavraNova, estadosProxs);
-            
         }
 
-        public Automato ConvertToAFD()
+        public List<List<Estado>> ConvertToAfd()
         {
-            Estado estadoInicial = ListEstados.Find(x => x.Inicial);
-            Automato AFD = new Automato();
-            AFD.Alfabeto.AddRange(Alfabeto);
-            AFD.ListEstados.Add(estadoInicial);
-
-            IncluirEstados(AFD, AFD.ListEstados);
-            return AFD;
-        }
-
-        private void IncluirEstados(Automato AFD, List<Estado> estadoList)
-        {
-            if (estadoList.Count > 0)
+            List<List<Estado>> estadosNovos = new List<List<Estado>>();
+            if (estadosNovos.Count == 0)
+                estadosNovos.Add(new List<Estado> {ListEstados.Find(x => x.Inicial)});
+            while (contador + 1 <= estadosNovos.Count)
             {
-                List<Estado> estadosRecursive = new List<Estado>();
-                List<Estado> estadosToAdd = new List<Estado>();
-                foreach (var estado in estadoList)
+                List<Estado> estadoAfd = estadosNovos[contador];
+                contador++;
+                foreach (var letra in Alfabeto)
                 {
-                    List<string> nomesEstadosAFD = new List<string>();
-                    foreach (var item in AFD.ListEstados)
+                    List<Estado> estadoUsandoLetra = new List<Estado>();
+                    foreach (var estado in estadoAfd)
                     {
-                        string aux = item.Nome;
-                        nomesEstadosAFD.Add(aux);
-                    }
-                    Estado estadoComposto = null;
-                    foreach (var estadosProxs in estado.Map.Values)
-                    {
-                        estadoComposto = new Estado();
-                        string nomeProx = "";
-                        foreach (var proxEstado in estadosProxs)
+                        if (estado.Map.ContainsKey(letra))
                         {
-                            nomeProx += proxEstado.Nome;
-                        }
-                        foreach (var estadoProx in estadosProxs)
-                        {
-                            bool contains = false;
-                            foreach (var a in nomesEstadosAFD)
+                            foreach (var b in estado.Map[letra])
                             {
-                                if (a.Equals(nomeProx))
-                                {
-                                    contains = true;
-                                    break;
-                                }
-                            }
-                            if (!contains)
-                            {
-                                estadoComposto.Nome += estadoProx.Nome;
-                                if (!estadoComposto.Inicial)
-                                    estadoComposto.Inicial = estadoProx.Inicial;
-                                if (!estadoComposto.Final)
-                                    estadoComposto.Final = estadoProx.Final;
-                                foreach (var kvp in estadoProx.Map)
-                                {
-                                    if (!estadoComposto.Map.ContainsKey(kvp.Key))
-                                        estadoComposto.Map[kvp.Key] = new List<Estado>();
-                                    estadoComposto.Map[kvp.Key].AddRange(kvp.Value);
-                                }
+                                if (!estadoUsandoLetra.Contains(b))
+                                    estadoUsandoLetra.Add(b);
                             }
                         }
-                        if (!string.IsNullOrEmpty(estadoComposto.Nome) && !estadosToAdd.Contains(estadoComposto))
-                            estadosToAdd.Add(estadoComposto);
                     }
-                    if (!string.IsNullOrEmpty(estadoComposto.Nome))
-                        estadosRecursive.Add(estadoComposto);
+                    bool allOfList1IsInList2 = false;
+                    foreach (var a in estadosNovos)
+                    {
+                        if (a.Count != estadoUsandoLetra.Count)
+                            continue;
+                        allOfList1IsInList2 = estadoUsandoLetra.Intersect(a).Count() == estadoUsandoLetra.Count();
+                        if (allOfList1IsInList2)
+                            break;
+                    }
+                    if (!allOfList1IsInList2)
+                        estadosNovos.Add(estadoUsandoLetra);
                 }
-                AFD.ListEstados.AddRange(estadosToAdd);
-                IncluirEstados(AFD, estadosRecursive);
             }
+            return estadosNovos;
         }
+
     }
 }

@@ -1,4 +1,4 @@
-AFD
+AFNe
 q0,q1,q2
 a,b
 q0

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace N1_Automatos
 {
-    enum EnumTipo
+    public enum EnumTipo
     {
         AFNe,
         AFN,
