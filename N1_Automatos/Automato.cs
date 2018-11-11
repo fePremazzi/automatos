@@ -78,6 +78,8 @@ namespace N1_Automatos
 
         public bool LePalavra(string palavra, List<Estado> estados)
         {
+            if (palavra.Equals(""))
+                return estados.Find(x => x.Final) != null;
             List<Estado> estadosProxs = new List<Estado>();
             char letra = palavra[0];
             string palavraNova = palavra.Remove(0, 1);

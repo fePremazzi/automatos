@@ -101,7 +101,6 @@ namespace N1_Automatos
                     string nomeConvertido = automatoFileNameSave + "convertido.txt";
                     File.WriteAllLines(nomeConvertido, AutomatoUtils.geraTxtConvertido(a, automato));
                 }
-                String parou = "parou";
             }
         }
 
