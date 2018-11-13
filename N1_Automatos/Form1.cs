@@ -85,20 +85,21 @@ namespace N1_Automatos
                         else
                         {
                             estadoList = new List<Estado>
-                        {
-                            automato.ListEstados.Find(x => x.Nome == linhaSplit[2])
-                        };
+                            {
+                                automato.ListEstados.Find(x => x.Nome == linhaSplit[2])
+                            };
                             estadoPartida.Map[linhaSplit[1]] = estadoList;
                         }
                     }
                     Automato automatoBreak = automato;
+                    loadIN.Enabled = true;
                 }
+
             }
             catch (Exception erro)
             {
                 MessageBox.Show(erro.Message, "Não foi possível carregar seu automato", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
 
         private void loadIN_Click(object sender, EventArgs e)

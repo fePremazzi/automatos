@@ -49,8 +49,8 @@ namespace N1_Automatos
 
         public static void VerificaTipo(string tipo)
         {
-            if (tipo.Trim() != EnumTipo.AFN.ToString() &&
-                tipo.Trim() != EnumTipo.AFNe.ToString() && tipo.Trim() != EnumTipo.AFD.ToString())
+            if (tipo.Trim().ToUpper() != EnumTipo.AFN.ToString() &&
+                tipo.Trim().ToUpper() != EnumTipo.AFNE.ToString() && tipo.Trim() != EnumTipo.AFD.ToString())
             {
                 throw new Exception("Tipo de automato incorreto. Deve ser AFN ou AFNe.");
             }
@@ -58,14 +58,19 @@ namespace N1_Automatos
 
         public static void VerificaEstados(string conteudo)
         {
+            aEstados = null;
             aEstados = conteudo.Trim().Split(',');
             VerificaRepetido(aEstados, "Estado repetido, insira apenas estados distintos um do outro.");
         }
 
         public static void VerificaAlfabeto(string conteudo)
         {
+            alfabeto = null;
             alfabeto = conteudo.Trim().Split(',');
             VerificaRepetido(alfabeto, "Simbolos do alfabeto repetidos, insira apenas simbolos distintos um do outro.");
+            if (alfabeto.Contains("@"))            
+                throw new Exception("Alfabeto nao pode contar o símbolo \"@\"");
+            
         }
 
         public static void VerificaEstadoInicial(string inicial)
@@ -100,13 +105,22 @@ namespace N1_Automatos
             if (arrayFuncT.Length != 3)
                 throw new Exception("Função de transição incompleta.");
 
-            if (!aEstados.Contains(arrayFuncT[0]) && !aEstados.Contains(arrayFuncT[2]))            
+            if (!aEstados.Contains(arrayFuncT[0]) && !aEstados.Contains(arrayFuncT[2]))
                 throw new Exception("Estado da função de transição nao pertence ao conjunto de dados fornecidos.");
 
 
             if (!alfabeto.Contains(arrayFuncT[1]))
                 throw new Exception("Símbolo consumido não faz parte do alfabeto");
 
+        }
+
+        public static void VerificaPalavras(string word)
+        {
+            for (int i = 0; i < word.Length; i++)
+            {
+                if (!alfabeto.Contains(word[i].ToString()))                
+                    throw new Exception("Palavra possui símbolos que nao existe no alfabeto");                
+            }
         }
 
         private static void VerificaRepetido(string[] array, string errorMessage)

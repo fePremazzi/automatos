@@ -38,7 +38,7 @@
             // btnLoad
             // 
             this.btnLoad.Location = new System.Drawing.Point(38, 26);
-            this.btnLoad.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnLoad.Margin = new System.Windows.Forms.Padding(2);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(150, 23);
             this.btnLoad.TabIndex = 0;
@@ -60,6 +60,7 @@
             // 
             // loadIN
             // 
+            this.loadIN.Enabled = false;
             this.loadIN.Location = new System.Drawing.Point(38, 78);
             this.loadIN.Name = "loadIN";
             this.loadIN.Size = new System.Drawing.Size(150, 23);
@@ -75,7 +76,7 @@
             this.ClientSize = new System.Drawing.Size(600, 366);
             this.Controls.Add(this.loadIN);
             this.Controls.Add(this.btnLoad);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
