@@ -94,7 +94,7 @@ namespace N1_Automatos
             return LePalavra(palavraNova, estadosProxs);
         }
 
-        public List<Estado> estadosConversao(List<Estado> estados)
+        public void estadosConversao(List<Estado> estados)
         {
             int count = estados.Count;
             List<Estado> estadosToAdd = new List<Estado>();
@@ -110,8 +110,6 @@ namespace N1_Automatos
             }
             if (count != estados.Count)
                 estadosConversao(estados);
-            return estados;
-            
         }
 
         public List<List<Estado>> ConvertToAfd()
