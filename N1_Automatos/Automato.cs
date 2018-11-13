@@ -30,6 +30,7 @@ namespace N1_Automatos
                 Estado estado = ListEstados[i];
                 if (!estado.Map.ContainsKey("@"))
                     continue;
+                
                 List<Estado> estados2 = estado.Map["@"];
                 int count = estados2.Count;
                 for (int j = 0; j < count; j++)
@@ -68,12 +69,7 @@ namespace N1_Automatos
                         estado.Map[letra].AddRange(estadosToAdd);
                 }
             }
-
-            foreach (var item in ListEstados)
-            {
-                if (item.Map.ContainsKey("@"))
-                    item.Map.Remove("@");
-            }
+           
         }
 
         public bool LePalavra(string palavra, List<Estado> estados)
@@ -98,8 +94,13 @@ namespace N1_Automatos
         public List<List<Estado>> ConvertToAfd()
         {
             List<List<Estado>> estadosNovos = new List<List<Estado>>();
-            if (estadosNovos.Count == 0)
-                estadosNovos.Add(new List<Estado> {ListEstados.Find(x => x.Inicial)});
+            List<Estado> estadosParaIniciar = new List<Estado>();
+            Estado estadoInicial = ListEstados.Find(x => x.Inicial);
+            estadosParaIniciar.Add(estadoInicial);
+            if (estadoInicial.Map.ContainsKey("@"))
+                estadosParaIniciar.AddRange(estadoInicial.Map["@"]);
+            estadosNovos.Add(estadosParaIniciar);
+            
             while (contador + 1 <= estadosNovos.Count)
             {
                 List<Estado> estadoAfd = estadosNovos[contador];

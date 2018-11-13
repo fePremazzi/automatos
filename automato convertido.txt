@@ -1,0 +1,11 @@
+AFD
+q0q1q2,q1q2,q2
+a,b
+q0q1q2
+q0q1q2,q1q2,q2
+(q0q1q2,a,q0q1q2)
+(q0q1q2,b,q1q2)
+(q1q2,a,q2)
+(q1q2,b,q1q2)
+(q2,a,q2)
+####

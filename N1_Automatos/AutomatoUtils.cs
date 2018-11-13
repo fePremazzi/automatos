@@ -43,7 +43,17 @@ namespace N1_Automatos
             }
             retorno.Add(linha);
             //4ª linha (estado inicial)
-            linha = a.ListEstados.Find(x => x.Inicial).Nome;
+            List<Estado> estadosIniciais = new List<Estado>();
+            Estado estadoInicial = a.ListEstados.Find(x => x.Inicial);
+            estadosIniciais.Add(estadoInicial);
+            if (estadoInicial.Map.ContainsKey("@"))
+                estadosIniciais.AddRange(estadoInicial.Map["@"]);
+            string nome = "";
+            foreach (var item in estadosIniciais)
+            {
+                nome += item.Nome;
+            }
+            linha = nome;
             retorno.Add(linha);
             //5ª linha (estados finais)
             linha = "";

@@ -23,12 +23,14 @@ namespace N1_Automatos
         }
         Automato automato;
         string automatoFileNameSave;
+        string automatoFilePath;
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
             if (openAutomato.ShowDialog() == DialogResult.OK)
             {
                 automatoFileNameSave = openAutomato.FileName.Substring(0, openAutomato.FileName.IndexOf(".txt", StringComparison.Ordinal));
+                automatoFilePath = Path.GetDirectoryName(openAutomato.FileName);
                 string[] lines = File.ReadAllLines(openAutomato.FileName);
 
                 //Verificações
@@ -98,7 +100,7 @@ namespace N1_Automatos
                 if (automato.Tipo.Equals(EnumTipo.AFNe))
                 {
                     a = automato.ConvertToAfd();
-                    string nomeConvertido = automatoFileNameSave + "convertido.txt";
+                    string nomeConvertido = automatoFileNameSave + " convertido.txt";
                     File.WriteAllLines(nomeConvertido, AutomatoUtils.geraTxtConvertido(a, automato));
                 }
             }
@@ -114,14 +116,18 @@ namespace N1_Automatos
                 List<bool> listBool = new List<bool>();
                 for (int i = 0; i < linesWords.Length; i++)
                 {
-                    List<Estado> estadoInicial = new List<Estado> { automato.ListEstados.Find(x => x.Inicial) };
-                    listBool.Add(automato.LePalavra(linesWords[i], estadoInicial));
+                    List<Estado> estadosIniciais = new List<Estado>();
+                    Estado estadoInicial = automato.ListEstados.Find(x => x.Inicial);
+                    estadosIniciais.Add(estadoInicial);
+                    if (estadoInicial.Map.ContainsKey("@"))
+                        estadosIniciais.AddRange(estadoInicial.Map["@"]);
+                    listBool.Add(automato.LePalavra(linesWords[i], estadosIniciais));
                 }
                 for (int i = 0; i < linesWords.Length; i++)
                 {
                     linesWords[i] = linesWords[i] + " " + (listBool[i] ? "ACEITO" : "REJEITADO");
                 }
-                File.WriteAllLines("words.out", linesWords);
+                File.WriteAllLines(automatoFilePath + "\\words.out", linesWords);
             }
         }
     }
