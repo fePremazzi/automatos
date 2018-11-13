@@ -75,7 +75,10 @@ namespace N1_Automatos
         public bool LePalavra(string palavra, List<Estado> estados)
         {
             if (palavra.Equals(""))
+            {
+                estadosConversao(estados);
                 return estados.Find(x => x.Final) != null;
+            }
             List<Estado> estadosProxs = new List<Estado>();
             char letra = palavra[0];
             string palavraNova = palavra.Remove(0, 1);
@@ -91,6 +94,26 @@ namespace N1_Automatos
             return LePalavra(palavraNova, estadosProxs);
         }
 
+        public List<Estado> estadosConversao(List<Estado> estados)
+        {
+            int count = estados.Count;
+            List<Estado> estadosToAdd = new List<Estado>();
+            foreach (var estado in estados)
+            {
+                if (estado.Map.ContainsKey("@"))
+                    estadosToAdd.AddRange(estado.Map["@"]);
+            }
+            foreach (var estado in estadosToAdd)
+            {
+                if (!estados.Contains(estado))
+                    estados.Add(estado);
+            }
+            if (count != estados.Count)
+                estadosConversao(estados);
+            return estados;
+            
+        }
+
         public List<List<Estado>> ConvertToAfd()
         {
             List<List<Estado>> estadosNovos = new List<List<Estado>>();
@@ -98,7 +121,7 @@ namespace N1_Automatos
             Estado estadoInicial = ListEstados.Find(x => x.Inicial);
             estadosParaIniciar.Add(estadoInicial);
             if (estadoInicial.Map.ContainsKey("@"))
-                estadosParaIniciar.AddRange(estadoInicial.Map["@"]);
+                estadosConversao(estadosParaIniciar);
             estadosNovos.Add(estadosParaIniciar);
             
             while (contador + 1 <= estadosNovos.Count)
@@ -119,6 +142,7 @@ namespace N1_Automatos
                             }
                         }
                     }
+                    estadosConversao(estadoUsandoLetra);
                     bool allOfList1IsInList2 = false;
                     foreach (var a in estadosNovos)
                     {

@@ -47,7 +47,7 @@ namespace N1_Automatos
             Estado estadoInicial = a.ListEstados.Find(x => x.Inicial);
             estadosIniciais.Add(estadoInicial);
             if (estadoInicial.Map.ContainsKey("@"))
-                estadosIniciais.AddRange(estadoInicial.Map["@"]);
+                a.estadosConversao(estadosIniciais);
             string nome = "";
             foreach (var item in estadosIniciais)
             {
@@ -98,6 +98,7 @@ namespace N1_Automatos
                             {
                                 if (kvp.Key.Equals(letra))
                                 {
+                                    a.estadosConversao(kvp.Value);
                                     foreach (var muitosEstados in kvp.Value)
                                     {
                                         if (!segundoNome.Contains(muitosEstados.Nome))
