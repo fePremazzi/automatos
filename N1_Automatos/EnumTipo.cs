@@ -8,7 +8,7 @@ namespace N1_Automatos
 {
     public enum EnumTipo
     {
-        AFNe,
+        AFNE,
         AFN,
         AFD
     }
