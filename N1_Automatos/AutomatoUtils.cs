@@ -128,25 +128,6 @@ namespace N1_Automatos
             }
         }
 
-        private static void VerificaRepetido(string[] array, string errorMessage)
-        {
-            string comparador = "";
-            for (int i = 0; i < array.Length; i++)
-            {
-                comparador = array[i];
-                for (int j = 0; j < array.Length; j++)
-                {
-                    if (i != j)
-                    {
-                        if (comparador == array[j])
-                            throw new Exception(errorMessage);
-                    }
-                }
-            }
-        }
-
-
-
         public static string[] geraTxtConvertido(List<List<Estado>> estadosAfd, Automato a)
         {
             List<string> retorno = new List<string>();
@@ -253,6 +234,23 @@ namespace N1_Automatos
             linha = "####";
             retorno.Add(linha);
             return retorno.ToArray();
+        }
+
+        private static void VerificaRepetido(string[] array, string errorMessage)
+        {
+            string comparador = "";
+            for (int i = 0; i < array.Length; i++)
+            {
+                comparador = array[i];
+                for (int j = 0; j < array.Length; j++)
+                {
+                    if (i != j)
+                    {
+                        if (comparador == array[j])
+                            throw new Exception(errorMessage);
+                    }
+                }
+            }
         }
     }
 }

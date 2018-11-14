@@ -112,18 +112,44 @@ namespace N1_Automatos
                         string nomeConvertido = automatoFileNameSave + " convertido.txt";
                         File.WriteAllLines(nomeConvertido, AutomatoUtils.geraTxtConvertido(a, automato));
                     }
-                    loadIN.Enabled = true;
+                    btnLoadIN.Enabled = true;
+                    SetLabels();
+                    MessageBox.Show("Automato carregado com sucesso", "Exito",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception erro)
             {
-                MessageBox.Show(erro.Message, "Não foi possível carregar seu automato", 
+                MessageBox.Show(erro.Message, "Não foi possível carregar seu automato",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
+
         }
 
-        
+        private void SetLabels()
+        {
+            lblTipo.Text = automato.Tipo.ToString();
+            string alfabeto = "";
+            string estados = "";
+            string estadosFinais = "";
+            foreach (string s in automato.Alfabeto)
+                alfabeto += s + ", ";
+            lblAlfabeto.Text = alfabeto.Substring(0, alfabeto.Length - 2);
+            foreach (Estado e in automato.ListEstados)
+            {
+                estados += e.Nome + ", ";
+
+                if (e.Final)
+                    estadosFinais = e.Nome + ", ";
+                else if (e.Inicial)
+                    lblEstadoInicial.Text = e.Nome;
+            }
+            lblEstadoFinal.Text = estadosFinais.Substring(0, estadosFinais.Length - 2);
+            lblEstados.Text = estados.Substring(0, estados.Length - 2);
+
+        }
+
+
 
         private void loadIN_Click(object sender, EventArgs e)
         {
@@ -145,6 +171,8 @@ namespace N1_Automatos
                     linesWords[i] = linesWords[i] + " " + (listBool[i] ? "ACEITO" : "REJEITADO");
                 }
                 File.WriteAllLines(automatoFilePath + "\\words.out", linesWords);
+                MessageBox.Show("Palavras lidas e salvas em \"words.out\".", "Palavras lidas com sucesso",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }
