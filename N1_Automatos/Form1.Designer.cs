@@ -192,7 +192,7 @@ namespace N1_Automatos
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(72, 13);
             this.label6.TabIndex = 2;
-            this.label6.Text = "Estado inicial:";
+            this.label6.Text = "Estados finais:";
             // 
             // lblEstadoFinal
             // 

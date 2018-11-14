@@ -93,6 +93,7 @@ namespace N1_Automatos
             }
             if (estadosProxs.Count == 0 || palavraNova.Length == 0)
                 return estadosProxs.Find(x => x.Final) != null;
+            estadosConversao(estadosProxs);
             return LePalavra(palavraNova, estadosProxs);
         }
 

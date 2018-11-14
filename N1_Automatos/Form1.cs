@@ -31,6 +31,7 @@ namespace N1_Automatos
             {
                 if (openAutomato.ShowDialog() == DialogResult.OK)
                 {
+                    textBox1.Text = "";
                     automatoFileNameSave = openAutomato.FileName.Substring(0, openAutomato.FileName.IndexOf(".txt", StringComparison.Ordinal));
                     automatoFilePath = Path.GetDirectoryName(openAutomato.FileName);
                     string[] lines = File.ReadAllLines(openAutomato.FileName);
@@ -141,8 +142,8 @@ namespace N1_Automatos
                 estados += e.Nome + ", ";
 
                 if (e.Final)
-                    estadosFinais = e.Nome + ", ";
-                else if (e.Inicial)
+                    estadosFinais += e.Nome + ", ";
+                if (e.Inicial)
                     lblEstadoInicial.Text = e.Nome;
             }
             lblEstadoFinal.Text = estadosFinais.Substring(0, estadosFinais.Length - 2);
@@ -154,6 +155,7 @@ namespace N1_Automatos
         {
             if (openIN_File.ShowDialog() == DialogResult.OK)
             {
+                textBox1.Text = "";
                 string[] linesWords = File.ReadAllLines(openIN_File.FileName);
                 List<bool> listBool = new List<bool>();
                 for (int i = 0; i < linesWords.Length; i++)

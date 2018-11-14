@@ -53,7 +53,7 @@ namespace N1_Automatos
             if (tipo.Trim().ToUpper() != EnumTipo.AFN.ToString() &&
                 tipo.Trim().ToUpper() != EnumTipo.AFNE.ToString() && tipo.Trim() != EnumTipo.AFD.ToString())
             {
-                throw new Exception("Tipo de automato incorreto. Deve ser AFN ou AFNe.");
+                throw new Exception("Tipo de automato incorreto. Deve ser AFN, AFNe ou AFD.");
             }
         }
 
@@ -86,8 +86,8 @@ namespace N1_Automatos
                 if (aInicial[0] == aEstados[i])
                     existe = true;
             }
-            if (existe == false)
-                throw new Exception("Estado inicial não existe. Não está dentre os o conjunto de estados existentes.");
+            if (!existe)
+                throw new Exception("Estado inicial não existe. Não está no conjunto de estados existentes.");
 
         }
 
@@ -106,7 +106,7 @@ namespace N1_Automatos
             if (arrayFuncT.Length != 3)
                 throw new Exception("Função de transição incompleta.");
 
-            if (!aEstados.Contains(arrayFuncT[0]) && !aEstados.Contains(arrayFuncT[2]))
+            if (!aEstados.Contains(arrayFuncT[0]) || !aEstados.Contains(arrayFuncT[2]))
                 throw new Exception("Estado da função de transição nao pertence ao conjunto de dados fornecidos.");
 
             if (arrayFuncT[1] == "@")
