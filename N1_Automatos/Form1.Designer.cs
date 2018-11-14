@@ -1,4 +1,6 @@
-﻿namespace N1_Automatos
+﻿using System.Windows.Forms;
+
+namespace N1_Automatos
 {
     partial class Form1
     {
@@ -89,6 +91,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(311, 92);
             this.textBox1.TabIndex = 0;
+            this.textBox1.ScrollBars = ScrollBars.Vertical;
             // 
             // label1
             // 
@@ -133,16 +136,18 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(107, 13);
             this.label5.TabIndex = 2;
-            this.label5.Text = "Funçõe de transição:";
+            this.label5.Text = "Funções de transição:";
             // 
             // btnTransicao
             // 
+            this.btnTransicao.Enabled = false;
             this.btnTransicao.Location = new System.Drawing.Point(131, 179);
             this.btnTransicao.Name = "btnTransicao";
             this.btnTransicao.Size = new System.Drawing.Size(201, 23);
             this.btnTransicao.TabIndex = 3;
             this.btnTransicao.Text = "Exibir funções de transição";
             this.btnTransicao.UseVisualStyleBackColor = true;
+            this.btnTransicao.Click += new System.EventHandler(this.transicao_Click);
             // 
             // lblTipo
             // 

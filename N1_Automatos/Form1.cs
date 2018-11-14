@@ -113,8 +113,9 @@ namespace N1_Automatos
                         File.WriteAllLines(nomeConvertido, AutomatoUtils.geraTxtConvertido(a, automato));
                     }
                     btnLoadIN.Enabled = true;
+                    btnTransicao.Enabled = true;
                     SetLabels();
-                    MessageBox.Show("Automato carregado com sucesso", "Exito",
+                    MessageBox.Show("Autômato carregado com sucesso", "Êxito",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -149,8 +150,6 @@ namespace N1_Automatos
 
         }
 
-
-
         private void loadIN_Click(object sender, EventArgs e)
         {
             if (openIN_File.ShowDialog() == DialogResult.OK)
@@ -163,17 +162,26 @@ namespace N1_Automatos
                     Estado estadoInicial = automato.ListEstados.Find(x => x.Inicial);
                     estadosIniciais.Add(estadoInicial);
                     if (estadoInicial.Map.ContainsKey("@"))
-                        estadosIniciais.AddRange(estadoInicial.Map["@"]);
+                        automato.estadosConversao(estadosIniciais);
                     listBool.Add(automato.LePalavra(linesWords[i], estadosIniciais));
                 }
                 for (int i = 0; i < linesWords.Length; i++)
                 {
                     linesWords[i] = linesWords[i] + " " + (listBool[i] ? "ACEITO" : "REJEITADO");
                 }
+                for (int i = 0; i < linesWords.Length; i++)
+                {
+                    textBox1.Text += linesWords[i] + Environment.NewLine;
+                }
                 File.WriteAllLines(automatoFilePath + "\\words.out", linesWords);
                 MessageBox.Show("Palavras lidas e salvas em \"words.out\".", "Palavras lidas com sucesso",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void transicao_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

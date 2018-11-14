@@ -79,6 +79,8 @@ namespace N1_Automatos
                 estadosConversao(estados);
                 return estados.Find(x => x.Final) != null;
             }
+            if (palavra.Contains("@"))
+                return false;
             List<Estado> estadosProxs = new List<Estado>();
             char letra = palavra[0];
             string palavraNova = palavra.Remove(0, 1);
