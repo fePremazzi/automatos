@@ -185,7 +185,7 @@ namespace N1_Automatos
         private void transicao_Click(object sender, EventArgs e)
         {
             string transicoes = "";
-            for (int i = 5 ; i < lines.Length ; i++){
+            for (int i = 5 ; i < lines.Length -1; i++){
                 transicoes += lines[i] + Environment.NewLine;
             }
             MessageBox.Show(transicoes, "Funções de transição",
