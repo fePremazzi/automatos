@@ -24,6 +24,7 @@ namespace N1_Automatos
         Automato automato;
         string automatoFileNameSave;
         string automatoFilePath;
+        string[] lines;
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
@@ -34,7 +35,7 @@ namespace N1_Automatos
                     textBox1.Text = "";
                     automatoFileNameSave = openAutomato.FileName.Substring(0, openAutomato.FileName.IndexOf(".txt", StringComparison.Ordinal));
                     automatoFilePath = Path.GetDirectoryName(openAutomato.FileName);
-                    string[] lines = File.ReadAllLines(openAutomato.FileName);
+                    lines = File.ReadAllLines(openAutomato.FileName);
 
                     //Verificações
                     AutomatoUtils.TamanhoMinimo(lines);
@@ -183,7 +184,12 @@ namespace N1_Automatos
 
         private void transicao_Click(object sender, EventArgs e)
         {
-            
+            string transicoes = "";
+            for (int i = 5 ; i < lines.Length ; i++){
+                transicoes += lines[i] + Environment.NewLine;
+            }
+            MessageBox.Show(transicoes, "Funções de transição",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
