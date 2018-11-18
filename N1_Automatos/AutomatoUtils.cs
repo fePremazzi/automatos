@@ -35,13 +35,24 @@ namespace N1_Automatos
             }
         }
 
+        public static string[] VerificaLinhaVazia(string[] lines)
+        {
+            List<string> newLines = new List<string>();
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(lines[i]))
+                    newLines.Add(lines[i]);
+            }
+            return newLines.ToArray();
+        }
+
         public static void VerificaQuintupla(string[] linhas)
         {
             int count = 0;
             //Vai até length -1 pra nao pegar o ####
             for (int i = 0; i < linhas.Length - 1; i++)
             {
-                if (!linhas[i].Contains("("))
+                if (!linhas[i].Contains("(") && !string.IsNullOrEmpty(linhas[i]))
                     count++;
             }
 

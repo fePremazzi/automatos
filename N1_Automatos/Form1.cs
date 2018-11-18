@@ -39,6 +39,7 @@ namespace N1_Automatos
                     lines = File.ReadAllLines(openAutomato.FileName);
 
                     //Verificações
+                    lines = AutomatoUtils.VerificaLinhaVazia(lines);
                     AutomatoUtils.TamanhoMinimo(lines);
                     AutomatoUtils.UltimaLinha(lines);
                     AutomatoUtils.VerificaQuintupla(lines);
