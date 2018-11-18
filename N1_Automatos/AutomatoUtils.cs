@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace N1_Automatos
 {
@@ -234,6 +235,66 @@ namespace N1_Automatos
             linha = "####";
             retorno.Add(linha);
             return retorno.ToArray();
+        }
+
+        public static void CreateGrid(List<List<Estado>> estadosAfd, Automato a, DataGridView dgv)
+        {
+            dgv.ColumnCount = a.Alfabeto.Count + 1;
+            int width = (dgv.Size.Width - 31)/ (a.Alfabeto.Count + 1);
+            dgv.Columns[0].Name = "Estados de partida";
+            dgv.Columns[0].Width = width;
+            for (int i = 0; i < a.Alfabeto.Count; i++)
+            {
+                dgv.Columns[i + 1].Name = a.Alfabeto[i];
+                dgv.Columns[i + 1].Width = width;
+            }
+            foreach (var estadoList in estadosAfd)
+            {
+                if (estadoList.Count == 0)
+                    continue;
+
+                string[] linha = new string[a.Alfabeto.Count + 1];
+                foreach (var item in estadoList)
+                {
+                    linha[0] += item.Nome;
+                }
+                foreach (var letra in a.Alfabeto)
+                {
+                    string segundoNome = "";
+                    bool le = false;
+                    foreach (var estado in estadoList)
+                    {
+                        if (estado.Map.ContainsKey(letra))
+                        {
+                            le = true;
+                            break;
+                        }
+                    }
+                    if (le)
+                    {
+                        foreach (var estado in estadoList)
+                        {
+                            foreach (var kvp in estado.Map)
+                            {
+                                if (kvp.Key.Equals(letra))
+                                {
+                                    a.estadosConversao(kvp.Value);
+                                    foreach (var muitosEstados in kvp.Value)
+                                    {
+                                        if (!segundoNome.Contains(muitosEstados.Nome))
+                                            segundoNome += muitosEstados.Nome;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                        segundoNome = "-";
+                    linha[a.Alfabeto.IndexOf(letra) + 1] = segundoNome;
+                }
+                dgv.Rows.Add(linha);
+            }
+            dgv.Height = dgv.Rows.GetRowsHeight(DataGridViewElementStates.Visible) + dgv.ColumnHeadersHeight;
         }
 
         private static void VerificaRepetido(string[] array, string errorMessage)

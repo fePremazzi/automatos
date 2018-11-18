@@ -30,6 +30,7 @@ namespace N1_Automatos
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnLoad = new System.Windows.Forms.Button();
             this.openAutomato = new System.Windows.Forms.OpenFileDialog();
             this.openIN_File = new System.Windows.Forms.OpenFileDialog();
@@ -48,6 +49,9 @@ namespace N1_Automatos
             this.lblEstadoInicial = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.lblEstadoFinal = new System.Windows.Forms.Label();
+            this.ttEstados = new System.Windows.Forms.ToolTip(this.components);
+            this.ttIniciais = new System.Windows.Forms.ToolTip(this.components);
+            this.ttFinais = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // btnLoad
@@ -89,9 +93,9 @@ namespace N1_Automatos
             this.textBox1.Location = new System.Drawing.Point(21, 215);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1.Size = new System.Drawing.Size(311, 92);
             this.textBox1.TabIndex = 0;
-            this.textBox1.ScrollBars = ScrollBars.Vertical;
             // 
             // label1
             // 
@@ -134,7 +138,7 @@ namespace N1_Automatos
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(18, 184);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(107, 13);
+            this.label5.Size = new System.Drawing.Size(112, 13);
             this.label5.TabIndex = 2;
             this.label5.Text = "Funções de transição:";
             // 
@@ -190,7 +194,7 @@ namespace N1_Automatos
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(18, 158);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(72, 13);
+            this.label6.Size = new System.Drawing.Size(75, 13);
             this.label6.TabIndex = 2;
             this.label6.Text = "Estados finais:";
             // 
@@ -252,6 +256,9 @@ namespace N1_Automatos
         private System.Windows.Forms.Label lblEstadoInicial;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label lblEstadoFinal;
+        private ToolTip ttEstados;
+        private ToolTip ttIniciais;
+        private ToolTip ttFinais;
     }
 }
 

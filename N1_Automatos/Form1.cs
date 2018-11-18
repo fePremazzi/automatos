@@ -20,6 +20,7 @@ namespace N1_Automatos
             this.MaximizeBox = false;
             openAutomato.Filter = "Arquivos Texto|*.txt";
             openIN_File.Filter = "Arquivos IN|*.in";
+           
         }
         Automato automato;
         string automatoFileNameSave;
@@ -33,7 +34,7 @@ namespace N1_Automatos
                 if (openAutomato.ShowDialog() == DialogResult.OK)
                 {
                     textBox1.Text = "";
-                    automatoFileNameSave = openAutomato.FileName.Substring(0, openAutomato.FileName.IndexOf(".txt", StringComparison.Ordinal));
+                    automatoFileNameSave = openAutomato.FileName.Substring(0, openAutomato.FileName.IndexOf(".txt", StringComparison.OrdinalIgnoreCase));
                     automatoFilePath = Path.GetDirectoryName(openAutomato.FileName);
                     lines = File.ReadAllLines(openAutomato.FileName);
 
@@ -113,10 +114,15 @@ namespace N1_Automatos
                         a = automato.ConvertToAfd();
                         string nomeConvertido = automatoFileNameSave + " convertido.txt";
                         File.WriteAllLines(nomeConvertido, AutomatoUtils.geraTxtConvertido(a, automato));
+                        Form2 form2 = new Form2(automato, a);
+                        form2.ShowDialog();
                     }
                     btnLoadIN.Enabled = true;
                     btnTransicao.Enabled = true;
                     SetLabels();
+                    ttEstados.SetToolTip(lblEstados, lblEstados.Text);
+                    ttIniciais.SetToolTip(lblEstadoInicial, lblEstadoInicial.Text);
+                    ttFinais.SetToolTip(lblEstadoFinal, lblEstadoFinal.Text);
                     MessageBox.Show("Autômato carregado com sucesso", "Êxito",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -158,6 +164,7 @@ namespace N1_Automatos
             {
                 textBox1.Text = "";
                 string[] linesWords = File.ReadAllLines(openIN_File.FileName);
+                string wordsFileName = openIN_File.FileName.Substring(0, openIN_File.FileName.IndexOf(".in", StringComparison.OrdinalIgnoreCase));
                 List<bool> listBool = new List<bool>();
                 for (int i = 0; i < linesWords.Length; i++)
                 {
@@ -176,8 +183,8 @@ namespace N1_Automatos
                 {
                     textBox1.Text += linesWords[i] + Environment.NewLine;
                 }
-                File.WriteAllLines(automatoFilePath + "\\words.out", linesWords);
-                MessageBox.Show("Palavras lidas e salvas em \"words.out\".", "Palavras lidas com sucesso",
+                File.WriteAllLines(wordsFileName + ".out", linesWords);
+                MessageBox.Show("Palavras lidas e salvas em \""+ wordsFileName + ".out\".", "Palavras lidas com sucesso",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
