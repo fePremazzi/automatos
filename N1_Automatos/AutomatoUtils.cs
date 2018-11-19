@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace N1_Automatos
 {
@@ -52,7 +53,7 @@ namespace N1_Automatos
             //Vai até length -1 pra nao pegar o ####
             for (int i = 0; i < linhas.Length - 1; i++)
             {
-                if (!linhas[i].Contains("(") && !string.IsNullOrEmpty(linhas[i]))
+                if (!linhas[i].Contains("("))
                     count++;
             }
 
@@ -158,6 +159,7 @@ namespace N1_Automatos
                     linha += estado.Nome;
                 }
             }
+            string[] estadosString = linha.Split(',');
             retorno.Add(linha);
             //3ª linha (alfabeto)
             linha = "";
@@ -234,6 +236,17 @@ namespace N1_Automatos
                             }
                         }
                     }
+                    if (!estadosString.ToList().Contains(segundoNome))
+                    {
+                        foreach (var e in estadosString.ToList())
+                        {
+                            if (SortString(e).Equals(SortString(segundoNome)))
+                            {
+                                segundoNome = e;
+                                break;
+                            }
+                        }
+                    }
                     if (!string.IsNullOrEmpty(primeiroNome))
                     {
                         linha += primeiroNome + "," + letra + "," + segundoNome;
@@ -247,9 +260,17 @@ namespace N1_Automatos
             retorno.Add(linha);
             return retorno.ToArray();
         }
+        
+        private static string SortString(string input)
+        {
+            char[] characters = input.ToArray();
+            Array.Sort(characters);
+            return new string(characters);
+        }
 
         public static void CreateGrid(List<List<Estado>> estadosAfd, Automato a, DataGridView dgv)
         {
+            bool jaFoi = false;
             dgv.ColumnCount = a.Alfabeto.Count + 1;
             int width = (dgv.Size.Width - 31)/ (a.Alfabeto.Count + 1);
             dgv.Columns[0].Name = "Estados de partida";
@@ -265,10 +286,17 @@ namespace N1_Automatos
                     continue;
 
                 string[] linha = new string[a.Alfabeto.Count + 1];
+                if (estadoList.Find(x => x.Inicial) != null && !jaFoi)
+                {
+                    linha[0] = "*";
+                    jaFoi = true;
+                }
                 foreach (var item in estadoList)
                 {
                     linha[0] += item.Nome;
                 }
+                if (estadoList.Find(x => x.Final) != null)
+                    linha[0] += "*";
                 foreach (var letra in a.Alfabeto)
                 {
                     string segundoNome = "";
